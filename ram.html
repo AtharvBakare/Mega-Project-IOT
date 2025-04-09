@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>12V Battery Charging Monitor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+    h2 {
+      color: #333;
+    }
+    .info {
+      margin: 1rem 0;
+    }
+    .info span {
+      font-weight: bold;
+    }
+    #receipt {
+      margin-top: 2rem;
+      background: #e8f5e9;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .charge-bar {
+      background: #ddd;
+      height: 25px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    .charge-bar-inner {
+      height: 100%;
+      background: linear-gradient(to right, #4caf50, #81c784);
+      width: 0;
+      transition: width 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔋 Battery Charging Monitor</h2>
+    <div class="info">Start Percentage: <span id="start">--</span>%</div>
+    <div class="info">Current Percentage: <span id="current">--</span>%</div>
+    <div class="charge-bar"><div class="charge-bar-inner" id="bar"></div></div>
+    <div class="info">Cost Per 1%: ₹<span id="rate">0.50</span></div>
+    <div class="info">Total Cost: ₹<span id="cost">--</span></div>
+    
+    <div id="receipt">
+      <h3>🧾 Charging Receipt</h3>
+      <p>Start: <span id="rStart">--</span>%</p>
+      <p>End: <span id="rEnd">--</span>%</p>
+      <p>Units Charged: <span id="rUnits">--</span>%</p>
+      <p>Total Cost: ₹<span id="rTotal">--</span></p>
+    </div>
+  </div>
+
+  <script>
+    let startPercent = null;
+    const costPerPercent = 0.50;
+
+    function updateUI(current) {
+      document.getElementById('current').innerText = current;
+      document.getElementById('bar').style.width = current + "%";
+
+      if (startPercent === null) startPercent = current;
+      const chargedUnits = current - startPercent;
+      const totalCost = (chargedUnits * costPerPercent).toFixed(2);
+
+      document.getElementById('start').innerText = startPercent;
+      document.getElementById('cost').innerText = totalCost;
+
+      // Receipt
+      document.getElementById('rStart').innerText = startPercent;
+      document.getElementById('rEnd').innerText = current;
+      document.getElementById('rUnits').innerText = chargedUnits;
+      document.getElementById('rTotal').innerText = totalCost;
+    }
+
+    // Example: simulate battery charging every second
+    let simulatedCharge = 40;
+    setInterval(() => {
+      if (simulatedCharge <= 100) {
+        updateUI(simulatedCharge);
+        simulatedCharge++;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
